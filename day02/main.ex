@@ -7,7 +7,7 @@ defmodule Day02 do
     File.read!(file) |> String.trim() |> String.split("\n")
   end
 
-  def parse_line("Game " <> line) do
+  defp parse_line("Game " <> line) do
     {id, rest} = Integer.parse(line)
 
     ": " <> results = rest
@@ -67,14 +67,14 @@ defmodule Day02 do
 
   defp min_set(result) do
     %{
-      :red => result |> Enum.map(fn x -> Map.get(x, :red, 0) end) |> Enum.max(),
-      :green => result |> Enum.map(fn x -> Map.get(x, :green, 0) end) |> Enum.max(),
-      :blue => result |> Enum.map(fn x -> Map.get(x, :blue, 0) end) |> Enum.max()
+      :red => result |> Enum.map(&Map.get(&1, :red, 0)) |> Enum.max(),
+      :green => result |> Enum.map(&Map.get(&1, :green, 0)) |> Enum.max(),
+      :blue => result |> Enum.map(&Map.get(&1, :blue, 0)) |> Enum.max()
     }
   end
 
   defp calc_power(set) do
-    set |> Map.values() |> Enum.reduce(1, fn x, acc -> x * acc end)
+    set |> Map.values() |> Enum.reduce(1, &(&1 * &2))
   end
 end
 
