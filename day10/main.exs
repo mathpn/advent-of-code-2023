@@ -62,7 +62,7 @@ defmodule Day10 do
 
     Enum.map(
       [:check_left, :check_right, :check_top, :check_bottom],
-      &walk(pipes, position, [], -1, &1)
+      &walk(pipes, position, [], 0, &1)
     )
   end
 
@@ -71,7 +71,7 @@ defmodule Day10 do
   defp walk(_pipes, _position, path, _steps, :end), do: path
 
   defp walk(pipes, {row, col}, path, steps, state) do
-    path = [{{row, col}, steps + 1} | path]
+    path = [{{row, col}, steps} | path]
 
     position =
       case state do
@@ -82,6 +82,7 @@ defmodule Day10 do
       end
 
     state = Map.get(@fsm, state, %{}) |> Map.get(get_char(pipes, position), :stop)
+
     walk(pipes, position, path, steps + 1, state)
   end
 
