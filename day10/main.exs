@@ -38,6 +38,10 @@ defmodule Day10 do
     read_file(file_path) |> walk_pipes() |> shortest_path() |> Map.values() |> Enum.max()
   end
 
+  def part_2(file_path) do
+    read_file(file_path) |> walk_pipes() |> inside_area()
+  end
+
   defp shortest_path(paths) do
     paths
     |> Enum.reduce(%{}, fn path, acc ->
@@ -45,6 +49,37 @@ defmodule Day10 do
         Map.update(acc, pos, count, &Enum.min([&1, count]))
       end)
     end)
+  end
+
+  defp inside_area(paths) do
+    polygon =
+      Enum.reduce(paths, [], fn path, acc ->
+        if length(path) > length(acc), do: path, else: acc
+      end)
+      |> Enum.map(fn {pos, _} -> pos end)
+
+    [head | _] = polygon
+
+    (polygon ++ [head])
+    |> Enum.chunk_every(2, 1, :discard)
+    |> Enum.map(&trapezoid_area/1)
+    |> Enum.sum()
+    |> inside_tiles(length(polygon))
+  end
+
+  defp trapezoid_area([{yi, xi}, {yj, xj}]) when xi == xj, do: 0
+
+  defp trapezoid_area([{yi, xi}, {yj, xj}]) do
+    (yi + yj) * (xi - xj) / 2
+  end
+
+  defp inside_tiles(area, n_vertices) do
+    if area < 0 do
+      -area
+    else
+      area
+    end
+    |> Kernel.-(n_vertices / 2 - 1)
   end
 
   defp find_start(pipes) do
@@ -94,3 +129,4 @@ defmodule Day10 do
 end
 
 Day10.part_1("input.txt") |> IO.puts()
+Day10.part_2("input.txt") |> IO.puts()
