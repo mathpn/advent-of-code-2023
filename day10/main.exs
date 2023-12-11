@@ -39,7 +39,7 @@ defmodule Day10 do
   end
 
   def part_2(file_path) do
-    read_file(file_path) |> walk_pipes() |> inside_area()
+    read_file(file_path) |> walk_pipes() |> longest_loop() |> inside_area()
   end
 
   defp shortest_path(paths) do
@@ -51,13 +51,14 @@ defmodule Day10 do
     end)
   end
 
-  defp inside_area(paths) do
-    polygon =
-      Enum.reduce(paths, [], fn path, acc ->
-        if length(path) > length(acc), do: path, else: acc
-      end)
-      |> Enum.map(fn {pos, _} -> pos end)
+  defp longest_loop(paths) do
+    Enum.reduce(paths, [], fn path, acc ->
+      if length(path) > length(acc), do: path, else: acc
+    end)
+    |> Enum.map(fn {pos, _} -> pos end)
+  end
 
+  defp inside_area(polygon) do
     [head | _] = polygon
 
     (polygon ++ [head])
@@ -67,20 +68,9 @@ defmodule Day10 do
     |> inside_tiles(length(polygon))
   end
 
-  defp trapezoid_area([{yi, xi}, {yj, xj}]) when xi == xj, do: 0
+  defp trapezoid_area([{yi, xi}, {yj, xj}]), do: (yi + yj) * (xi - xj) / 2
 
-  defp trapezoid_area([{yi, xi}, {yj, xj}]) do
-    (yi + yj) * (xi - xj) / 2
-  end
-
-  defp inside_tiles(area, n_vertices) do
-    if area < 0 do
-      -area
-    else
-      area
-    end
-    |> Kernel.-(n_vertices / 2 - 1)
-  end
+  defp inside_tiles(area, n_vertices), do: 1 + abs(area) - n_vertices / 2
 
   defp find_start(pipes) do
     pipes
