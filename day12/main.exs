@@ -38,7 +38,8 @@ defmodule Day12 do
     |> Enum.filter(&(not Enum.member?(known_idx, &1)))
     |> comb(Enum.sum(stats) - length(damaged))
     |> Stream.map(&(&1 ++ damaged))
-    |> Enum.filter(&valid_line(&1, stats))
+    |> Stream.filter(&(permutation_stats(&1) == stats))
+    |> Enum.to_list()
     |> length()
   end
 
@@ -50,30 +51,9 @@ defmodule Day12 do
     for(l <- comb(t, m - 1), do: [h | l]) ++ comb(t, m)
   end
 
-  defp valid_line(combination, stats) do
-    # IO.puts("validating")
-
-    line_stats =
-      combination
-      |> Enum.sort()
-      # |> IO.inspect()
-      |> permutation_stats()
-
-    # IO.puts("stats:")
-    # IO.inspect(stats)
-    # IO.puts("line_stats:")
-    # IO.inspect(line_stats)
-    # IO.puts("validated")
-
-    line_stats == stats
-  end
-
   defp permutation_stats(combination) do
     (Enum.sort(combination) ++ [-42])
     |> Enum.reduce({[], nil, 0}, fn idx, {cont, prev, count} ->
-      # IO.puts("idx #{idx} prev #{prev} count #{count}")
-      # IO.inspect(cont)
-
       case prev do
         nil ->
           {cont, idx, count + 1}
