@@ -93,13 +93,6 @@ func main() {
 	var seq_hash int
 	total := 0
 
-	for _, seq := range seqs {
-		seq_hash = hash(seq)
-		total += seq_hash
-	}
-
-	fmt.Printf("Part 1: %d\n", total)
-
 	box_map := make(map[int][]lens, 256)
 
 	for _, seq := range seqs {
@@ -109,6 +102,7 @@ func main() {
 	}
 
 	power := focusingPower(box_map)
+	fmt.Printf("Part 1: %d\n", total)
 	fmt.Printf("Part 2: %d\n", power)
 
 }
