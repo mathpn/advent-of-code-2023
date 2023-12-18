@@ -45,7 +45,6 @@ defmodule Day16 do
     beam_path |> Enum.map(fn {_, pos} -> pos end) |> Enum.uniq() |> length()
   end
 
-
   defp parse_contraption(lines) do
     Enum.with_index(lines)
     |> Enum.flat_map(fn {line, row} ->
