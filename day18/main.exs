@@ -59,12 +59,12 @@ defmodule Day18 do
 
   defp area(polygon) do
     l_boundary = length_boundary(polygon)
-    polygon_area(polygon) |> inside_tiles(l_boundary) |> then(&(&1 + 1 + l_boundary))
+    polygon_area(polygon) |> inside_tiles(l_boundary) |> then(&(&1 + l_boundary))
   end
 
   defp trapezoid_area([{xi, yi}, {xj, yj}]), do: (yi + yj) * (xi - xj) / 2
 
-  defp inside_tiles(area, n_vertices), do: abs(area) - n_vertices / 2
+  defp inside_tiles(area, n_vertices), do: 1 + abs(area) - n_vertices / 2
 end
 
 Day18.part_1("input.txt") |> IO.puts()
